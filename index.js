@@ -214,6 +214,7 @@ function createMainWindow() {
 	win.on('page-title-updated', (e, title) => {
 		e.preventDefault();
 		updateBadge(title, titlePrefix);
+		sendAction('send-notification');
 	});
 
 	win.on('focus', () => {
