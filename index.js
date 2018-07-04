@@ -19,7 +19,7 @@ require('electron-dl')();
 require('electron-context-menu')();
 
 const domain = config.get('useWorkChat') ? 'facebook.com' : 'messenger.com';
-const {app, ipcMain, Menu, nativeImage} = electron;
+const {app, ipcMain, Menu, nativeImage, Notification} = electron;
 
 app.setAppUserModelId('com.sindresorhus.caprine');
 
@@ -214,7 +214,6 @@ function createMainWindow() {
 	win.on('page-title-updated', (e, title) => {
 		e.preventDefault();
 		updateBadge(title, titlePrefix);
-		sendAction('send-notification');
 	});
 
 	win.on('focus', () => {
@@ -364,4 +363,14 @@ app.on('before-quit', () => {
 	if (!mainWindow.isFullScreen()) {
 		config.set('lastWindowState', mainWindow.getBounds());
 	}
+});
+
+ipcMain.on('notifications', (event, title, body, icon, silent) => {
+	const notification = new Notification({
+		title,
+		body,
+		icon: nativeImage.createFromDataURL(icon),
+		silent
+	});
+	notification.show();
 });
