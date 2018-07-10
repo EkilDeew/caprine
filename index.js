@@ -370,7 +370,13 @@ ipcMain.on('notifications', (event, title, body, icon, silent) => {
 		title,
 		body,
 		icon: nativeImage.createFromDataURL(icon),
-		silent
+		silent,
+		hasReply: true
 	});
+
+	notification.on('reply', (err, reply) => {
+		// send #reply to the right recipient
+	});
+
 	notification.show();
 });
